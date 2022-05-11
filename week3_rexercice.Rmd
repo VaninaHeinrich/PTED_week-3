@@ -70,3 +70,49 @@ Task 3 -------------------------------------------------------------------------
 caro %>%ggplot(aes(E, N))  + geom_path(color = "gray") + geom_point(aes(color = static)) + coord_fixed() + theme(legend.position = "right")
 ```
 
+Task 4 -------------------------------------------------------------------------
+
+```{r}
+rle_id <- function(vec){
+  x <- rle(vec)$lengths
+  as.factor(rep(seq_along(x), times=x))
+  }
+```
+
+```{r}
+caro <- mutate(caro, segment_id = rle_id(static))
+caro
+```
+```{r}
+caro_filter <- caro %>% filter(!static)
+View(caro_filter)
+```
+
+```{r}
+caro1 <- caro_filter %>%ggplot(aes(E, N))  + geom_path(color = caro_filter$segment_id) + geom_point(color = caro_filter$segment_id) + coord_fixed() + theme(legend.position = "right") + ggtitle("All segments (uncleaned)")
+caro1
+```
+```{r}
+#install.packages("plyr")
+library(plyr)
+ddply(caro_filter, .(segment_id), nrow)
+```
+The result show that segment_id 10 and 12 have less then 5 minutes segments. 
+Removing segment_id 10 and 12
+
+```{r}
+caro_filter2 <- caro_filter[!(caro_filter$segment_id=="10" | caro_filter$segment_id=="12"),]
+View(caro_filter2)
+```
+
+```{r}
+caro2 <- caro_filter2 %>%ggplot(aes(E, N), group_by(caro_filter2$segment_id))  + geom_path(color = caro_filter2$segment_id) + geom_point(color = caro_filter2$segment_id) + coord_fixed() + theme(legend.position = "right") + ggtitle("Long segments (removed seg < 5)")
+caro2
+```
+
+showing both graphs next to each other : 
+
+```{r}
+grid.arrange(caro1, caro2, ncol=2, nrow=1, top = "Moving segments coloured by Segment ID")
+```
+
