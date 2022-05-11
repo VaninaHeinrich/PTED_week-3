@@ -64,3 +64,9 @@ View(caro)
 ```
 
 
+Task 3 -------------------------------------------------------------------------
+
+```{r}
+caro %>%ggplot(aes(E, N))  + geom_path(color = "gray") + geom_point(aes(color = static)) + coord_fixed() + theme(legend.position = "right")
+```
+
