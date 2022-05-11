@@ -30,7 +30,13 @@ caro60 <- read_csv("caro60.csv", col_types = cols(CollarID = col_number(), Datet
 View(caro60)
 ```
 
+Window interval of 6 minutes (n +/- 3)
+
 ```{r}
-caro_6 <- slice(caro60, seq(from = 1, to = 200, by = 6))
+caro <- mutate(caro60, nMinus3 = sqrt((lag(E,3)-E)^2+(lag(N,3)-N)^2), nMinus2 = sqrt((lag(E,2)-E)^2+(lag(N,2)-N)^2), nMinus1 = sqrt((lag(E,1)-E)^2+(lag(N,1)-N)^2), nPlus1  = sqrt((E-lead(E,1))^2+(N-lead(N,1))^2), nPlus2  = sqrt((E-lead(E,2))^2+(N-lead(N,2))^2), nPlus3  = sqrt((E-lead(E,3))^2+(N-lead(N,3))^2))
+
+View(caro)
 ```
+
+Task 2 ----------------------------------
 
