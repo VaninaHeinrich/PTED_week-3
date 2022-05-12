@@ -106,7 +106,7 @@ View(caro_filter2)
 ```
 
 ```{r}
-caro2 <- caro_filter2 %>%ggplot(aes(E, N), group_by(caro_filter2$segment_id))  + geom_path(color = caro_filter2$segment_id) + geom_point(color = caro_filter2$segment_id) + coord_fixed() + theme(legend.position = "right") + ggtitle("Long segments (removed seg < 5)")
+caro2 <- caro_filter2 %>%ggplot(aes(E, N))  + geom_path(color = caro_filter2$segment_id) + geom_point(color = caro_filter2$segment_id) + coord_fixed() + theme(legend.position = "right") + ggtitle("Long segments (removed seg < 5)")
 caro2
 ```
 
@@ -115,4 +115,44 @@ showing both graphs next to each other :
 ```{r}
 grid.arrange(caro1, caro2, ncol=2, nrow=1, top = "Moving segments coloured by Segment ID")
 ```
+
+Task 5 ------------------------------------------------------------------------
+
+```{r}
+library(readr)
+pedestrian <- read_csv("pedestrian.csv", 
+    col_types = cols(TrajID = col_number(), 
+        E = col_number(), N = col_number(), 
+        DatetimeUTC = col_datetime(format = "%Y-%m-%dT%H:%M:%SZ")))
+View(pedestrian)
+```
+
+How many pedestrian do we have ? 
+```{r}
+library(plyr)
+ddply(pedestrian, .(TrajID), nrow)
+```
+we have 6 pedestrians, we need 6 subsets to make 6 graphs
+
+```{r}
+P1 <- subset(pedestrian, TrajID == "1")
+P2 <- subset(pedestrian, TrajID == "2")
+P3 <- subset(pedestrian, TrajID == "3")
+P4 <- subset(pedestrian, TrajID == "4")
+P5 <- subset(pedestrian, TrajID == "5")
+P6 <- subset(pedestrian, TrajID == "6")
+```
+
+to verify if the subset function did work, i can just view them and see if the tibble has the same number of rows as the ddply function showed
+
+```{r}
+G1 <- ggplot(P1, aes(E,N)) + geom_point(colour = "red") + geom_path(colour = "red") + ggtitle("TrajID 1") + theme(legend.position="none", plot.title = element_text(hjust = 0.5))
+G2 <- ggplot(P1, aes(E,N)) + geom_point(colour = "blue") + geom_path(colour = "blue") + ggtitle("TrajID 2") + theme(legend.position="none", plot.title = element_text(hjust = 0.5))
+G3 <- ggplot(P3, aes(E,N)) + geom_point(colour = "orange") + geom_path(colour = "orange") + ggtitle("TrajID 3") + theme(legend.position="none", plot.title = element_text(hjust = 0.5))
+G4 <- ggplot(P4, aes(E,N)) + geom_point(colour = "yellow") + geom_path(colour = "yellow") + ggtitle("TrajID 4") + theme(legend.position="none", plot.title = element_text(hjust = 0.5))
+G5 <- ggplot(P5, aes(E,N)) + geom_point(colour = "gray") + geom_path(colour = "gray") + ggtitle("TrajID 5") + theme(legend.position="none", plot.title = element_text(hjust = 0.5))
+G6 <- ggplot(P6, aes(E,N)) + geom_point(colour = "green") + geom_path(colour = "green") + ggtitle("TrajID 6") + theme(legend.position="none", plot.title = element_text(hjust = 0.5))
+grid.arrange(G1, G2, G3, G4, G5, G6, top = "Visual comparison of the 6 trajectories")
+```
+
 
