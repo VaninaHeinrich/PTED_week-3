@@ -156,3 +156,118 @@ grid.arrange(G1, G2, G3, G4, G5, G6, top = "Visual comparison of the 6 trajector
 ```
 
 
+Task 6 ------------------------------------------------------------------------
+
+```{r}
+#install.packages("SimilarityMeasures")
+help(package = "SimilarityMeasures")
+```
+
+*******************DTW*******************
+
+```{r}
+#library(SimilarityMeasures)
+path1 <- data.matrix(P1)
+path2 <- data.matrix(P2)
+path3 <- data.matrix(P3)
+path4 <- data.matrix(P4)
+path5 <- data.matrix(P5)
+path6 <- data.matrix(P6)
+dtw1 <- DTW(path1, path2, pointSpacing = -1)
+dtw2 <- DTW(path1, path3, pointSpacing = -1)
+dtw3 <- DTW(path1, path4, pointSpacing = -1)
+dtw4 <- DTW(path1, path5, pointSpacing = -1)
+dtw5 <- DTW(path1, path6, pointSpacing = -1)
+#dtw1 #31622.83
+#dtw2 #50859.16
+#dtw3 #13550.68
+#dtw4 #5855.441
+#dtw5 #1178.422
+```
+
+```{r}
+value <- c(31622.83,50859.16, 13550.68,5855.441, 1178.422)
+comparison_trajectory <- c(1, 2, 3, 4, 5)
+df_dtw <- data.frame(comparison_trajectory, value)
+is.numeric(df_dtw$comparison_trajectory)
+is.numeric(df_dtw$value)
+df_dtw
+```
+
+
+
+```{r}
+hist_dtw <- ggplot(df_dtw,aes(comparison_trajectory, value, fill=comparison_trajectory)) + geom_col()
+hist_dtw
+```
+
+
+*******************EDITDIST*******************
+
+```{r}
+ED1 <- EditDist(path1, path2, pointDistance=20)
+ED2 <- EditDist(path1, path3, pointDistance=20)
+ED3 <- EditDist(path1, path4, pointDistance=20)
+ED4 <- EditDist(path1, path5, pointDistance=20)
+ED5 <- EditDist(path1, path6, pointDistance=20)
+```
+
+ED1 = 45
+ED2 = 47
+ED3 = 48
+ED4 = 49
+ED5 = 27
+
+```{r}
+value <- c(45,47, 48,49, 27)
+comparison_trajectory <- c(1, 2, 3, 4, 5)
+df_ED <- data.frame(comparison_trajectory, value)
+is.numeric(df_ED$comparison_trajectory)
+is.numeric(df_ED$value)
+df_ED
+```
+
+```{r}
+hist_ED <- ggplot(df_ED,aes(comparison_trajectory, value, fill=comparison_trajectory)) + geom_col()
+hist_ED
+```
+
+
+
+*******************FRECHET*******************
+
+```{r}
+fre1 <- Frechet(path1, path2, testLeash = -1) #1042.081
+fre2 <- Frechet(path1, path3, testLeash = -1) #2307.845
+fre3 <- Frechet(path1, path4, testLeash = -1) #1075.993
+fre4 <- Frechet(path1, path5, testLeash = -1) #742.6644 
+fre5 <- Frechet(path1, path6, testLeash = -1) #39.30935
+```
+
+```{r}
+value <- c(1042.081,2307.845, 1075.993,742.6644, 39.30935)
+comparison_trajectory <- c(1, 2, 3, 4, 5)
+df_frechet <- data.frame(comparison_trajectory, value)
+is.numeric(df_frechet$comparison_trajectory)
+is.numeric(df_frechet$value)
+df_frechet
+```
+
+```{r}
+hist_frechet <- ggplot(df_frechet,aes(comparison_trajectory, value, fill=comparison_trajectory)) + geom_col()
+hist_frechet
+```
+
+
+
+*******************LCSS*******************
+
+```{r}
+l1 <- LCSS(path1, path2, pointSpacing = -1, pointDistance =20, errorMarg=2, returnTrans=False)
+l2 <- LCSS(path1, path3, pointSpacing = -1, pointDistance =20, errorMarg=2, returnTrans=False)
+l3 <- LCSS(path1, path4, pointSpacing = -1, pointDistance =20, errorMarg=2, returnTrans=False)
+l4 <- LCSS(path1, path5, pointSpacing = -1, pointDistance =20, errorMarg=2, returnTrans=False)
+l5 <- LCSS(path1, path6, pointSpacing = -1, pointDistance =20, errorMarg=2, returnTrans=False)
+```
+
+I stopped the computing process as after 1h30, the first line wasn't even finished...
